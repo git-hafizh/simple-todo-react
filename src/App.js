@@ -1,70 +1,90 @@
-import React from "react";
+import React, { Component } from "react";
 import "./App.css";
-import ListTasks from "./ListTasks";
 
-class App extends React.Component {
+class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       task: [],
       listTask: {
-        text: "",
-        key: ""
+        id: 1, 
+        msg: "",
+        isCompleted: false
       },
     };
 
-    this.handleInput = this.handleInput.bind(this);
+    this.inputTodo = this.inputTodo.bind(this);
     this.addTodo = this.addTodo.bind(this);
-  }
+    this.deleteTodo = this.deleteTodo.bind(this);
 
-  handleInput(e) {
-    this.setState({
-      listTask: {
-        text: e.target.value,
-        key: Date.now()
-      },
-    });
   }
 
   addTodo(e) {
     e.preventDefault();
-    const task = this.state.listTask;
+    const newTask = this.state.listTask;
 
-    //if task not in the list 
-    if(task.text !== ""){
-      //then add to the list
-      const tasks = [...this.state.task, task];
+    // prevent user to add empty todo
+    if(!newTask.msg || /^\s*$/.test(newTask.msg)){
+      return alert("Todo cannot be empty");
+    }
+
+    if (newTask !== "") {
+      const tasks = [...this.state.task, newTask];
       this.setState({
         task: tasks,
         listTask: {
-          text: "",
-          key: ""
-        }
-      })
-    }else {
-      alert("task has already been added")
+          id: "",
+          msg: "",
+        },
+      });
     }
+    e.target.reset();
+    console.log(this.state.listTask)
+  }
+
+  inputTodo(e) {
+    this.setState({
+      listTask: {
+        id: Math.floor(Math.random() * 1000),
+        msg: e.target.value,
+      },
+    });
+  }
+
+  deleteTodo(id) {
+    const taskState = this.state.task;
+    const taskFiltered = taskState.filter((item) => item.id !== id);
+    this.setState({
+      task: taskFiltered,
+    });
   }
 
   render() {
+    const { task } = this.state;
+
     return (
-      <div className="App">
-        <header className="App-header">
-          <div className="container">
-            <p id="title">Simple To-Do List</p>
-            <form onSubmit={this.addTodo}>
-              <div className="adding-todo">
-                <input
-                  onChange={this.handleInput}
-                  id="input-add"
-                  placeholder="Add todo..."
-                ></input>
-              </div>
-              <button id="add-todo" type="submit">+</button>
-            </form>
-            <ListTasks task={this.state.task}/>
-          </div>
-        </header>
+      <div className="bg">
+        <h4>Simple To-Do List</h4>
+        <form onSubmit={this.addTodo}>
+          <input
+            onChange={this.inputTodo}
+            className="input-todo"
+            placeholder="Add todo..."
+          />
+          <button id="add-btn" type="submit">
+            +
+          </button>
+        </form>
+        {task.map((item) => {
+          return (
+            <div className="list-task" key={item.id}>
+              <span id="todo-task" key={item.id} style={{ textDecoration: item.done ? "line-through" : "" }}>
+                {item.msg}
+              </span>
+              <button id="del-btn" onClick={() => this.deleteTodo(item.id)}>X</button>
+            </div>
+          );
+        })}
       </div>
     );
   }
