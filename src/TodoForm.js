@@ -22,10 +22,10 @@ export default function TodoForm({addTodo, edit}) {
       {/* <h4>Simple To-Do List</h4> */}
       <form onSubmit={handleSubmit}>
         {edit ? (
-        <div>
+        <div className="edit-todo from-bottom">
         <input
           placeholder="Add todo..."
-          className="input-todo"
+          className="input-todo-edit"
           name="task"
           value={value}
           onChange={e => setValue(e.target.value)}

@@ -43,6 +43,7 @@ const completeTodo = (id) => {
 
   return (
     <div className="bg">
+      <h4>Simple To-Do List</h4>
       <TodoForm addTodo={addTodo} />
       <Todo todos={todos} completeTodo={completeTodo} deleteTodo={deleteTodo} updateTodo={updateTodo} />
     </div>
