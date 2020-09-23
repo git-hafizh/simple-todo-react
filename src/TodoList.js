@@ -7,6 +7,10 @@ function TodoList() {
   const [todos, setTodos] = React.useState([]);
 
   const addTodo = (task) => {
+    if (!task.msg || /^\s*$/.test(task.msg)) {
+      return alert("Todo cannot be empty");
+    }
+
     const newTodos = [...todos, task];
     setTodos(newTodos);
 
@@ -18,10 +22,29 @@ function TodoList() {
     setTodos(newTodo)
 }
 
+const updateTodo = (id, newTodo) => {
+  if (!newTodo.msg || /^\s*$/.test(newTodo.msg)) {
+    return alert("Todo cannot be empty");
+  }
+
+  //
+  setTodos(prev => prev.map(item => (item.id === id ? newTodo : item)))
+}
+
+const completeTodo = (id) => {
+  const newTodo = todos.map(todo => {
+    if(todo.id === id){
+      todo.isComplete = !todo.isComplete
+    }
+    return todo;
+  })
+  setTodos(newTodo)
+}
+
   return (
     <div className="bg">
       <TodoForm addTodo={addTodo} />
-      <Todo todos={todos} deleteTodo={deleteTodo} />
+      <Todo todos={todos} completeTodo={completeTodo} deleteTodo={deleteTodo} updateTodo={updateTodo} />
     </div>
   );
 }
